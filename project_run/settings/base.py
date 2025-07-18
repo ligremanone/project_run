@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "debug_toolbar",
     "app_run",
 ]
 
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "project_run.urls"
@@ -115,3 +117,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 COMPANY_NAME = "Probezhka"
 SLOGAN = "Пробежка без напряга"
 CONTACTS = "ООО «Probezhka» Россия, г. Санкт-Петербург, ул. Беговая, д. 12, офис 404"
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
