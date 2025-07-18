@@ -1,10 +1,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
-
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from django.contrib.auth.models import User
 from app_run.models import Run
-from app_run.serializers import RunSerializer
+from app_run.serializers import RunSerializer, UserSerializer
 from project_run.settings.base import COMPANY_NAME, SLOGAN, CONTACTS
 
 
@@ -22,3 +22,18 @@ def company_details(request: Request) -> Response:
 class RunViewSet(ModelViewSet):
     queryset = Run.objects.all()
     serializer_class = RunSerializer
+
+
+class UsersTypeViewSet(ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(is_superuser=False)
+        type = self.request.query_params.get("type", None)
+        if type:
+            if type == "coach":
+                queryset = queryset.filter(is_staff=True)
+            elif type == "athlete":
+                queryset = queryset.filter(is_staff=False)
+        return queryset
