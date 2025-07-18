@@ -25,4 +25,4 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def get_type(self, obj):
-        return self.context.get("request").query_params.get("type")
+        return "coach" if obj.is_staff else "athlete"
