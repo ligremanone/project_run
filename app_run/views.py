@@ -70,7 +70,7 @@ class ChallengeViewSet(ModelViewSet):
         queryset = self.queryset
         athlete = self.request.query_params.get("athlete", None)
         if athlete:
-            queryset = queryset.filter(athlete=athlete)
+            queryset = queryset.filter(athlete=int(athlete))
         return queryset
 
 
@@ -106,7 +106,7 @@ class RunAPIStopView(APIView):
         finished_run_count = Run.objects.filter(
             status=Run.FINISHED, athlete=run.athlete.id
         ).count()
-        if finished_run_count >= 10:
+        if finished_run_count == 10:
             challenge = Challenge(
                 full_name=CHALLENGE_DO_10_RUNS,
                 athlete=AthleteInfo.objects.get(user_id=run.athlete),
