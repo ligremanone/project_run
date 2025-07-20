@@ -44,3 +44,11 @@ class AthleteInfo(models.Model):
         blank=True,
         null=True,
     )
+
+
+class Challenge(models.Model):
+    full_name = models.CharField(max_length=100)
+    athlete = models.ForeignKey(
+        AthleteInfo,
+        on_delete=models.CASCADE,
+    )
