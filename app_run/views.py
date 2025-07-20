@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from django.contrib.auth.models import User
-from app_run.models import Run
-from app_run.serializers import RunSerializer, UserSerializer
+from app_run.models import Run, AthleteInfo
+from app_run.serializers import RunSerializer, UserSerializer, AthleteInfoSerializer
 from project_run.settings.base import COMPANY_NAME, SLOGAN, CONTACTS
 
 
@@ -112,3 +112,43 @@ class UsersTypeViewSet(ReadOnlyModelViewSet):
             elif type == "athlete":
                 queryset = queryset.filter(is_staff=False)
         return queryset
+
+
+class AthleteInfoAPIView(APIView):
+    def get(self, request: Request, athlete_id: int) -> Response:
+        user = get_object_or_404(
+            User,
+            id=athlete_id,
+        )
+        athlete, created = AthleteInfo.objects.get_or_create(user_id=user)
+        return Response(AthleteInfoSerializer(athlete).data)
+
+    def put(self, request: Request, athlete_id: int) -> Response:
+        if (
+            int(request.data.get("weight")) <= 0
+            or int(request.data.get("weight")) >= 900
+        ):
+            return Response(
+                {"message": "Incorrect weight value"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        user = get_object_or_404(
+            User,
+            id=athlete_id,
+        )
+        athlete, created = AthleteInfo.objects.update_or_create(
+            user_id=user,
+            defaults={
+                "weight": request.data.get("weight"),
+                "goals": request.data.get("goals"),
+            },
+        )
+        if created:
+            return Response(
+                {"message": "Athlete created"},
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(
+            {"message": "Athlete info updated"},
+            status=status.HTTP_200_OK,
+        )
