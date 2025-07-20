@@ -99,19 +99,19 @@ class RunAPIStopView(APIView):
         if run.status == Run.IN_PROGRESS:
             run.status = Run.FINISHED
             run.save()
+            finished_run_count = Run.objects.filter(
+                status=Run.FINISHED, athlete=run.athlete.id
+            ).count()
+            if finished_run_count == 10:
+                challenge = Challenge(
+                    full_name=CHALLENGE_DO_10_RUNS,
+                    athlete=AthleteInfo.objects.get(user_id=run.athlete),
+                )
+                challenge.save()
             return Response(
                 {"message": "Run stopped"},
                 status=status.HTTP_200_OK,
             )
-        finished_run_count = Run.objects.filter(
-            status=Run.FINISHED, athlete=run.athlete.id
-        ).count()
-        if finished_run_count == 10:
-            challenge = Challenge(
-                full_name=CHALLENGE_DO_10_RUNS,
-                athlete=AthleteInfo.objects.get(user_id=run.athlete),
-            )
-            challenge.save()
         return Response(
             {"message": "Run not started or already finished"},
             status=status.HTTP_400_BAD_REQUEST,
