@@ -27,3 +27,20 @@ class Run(models.Model):
         blank=True,
         null=True,
     )
+
+
+class AthleteInfo(models.Model):
+    user_id = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    goals = models.TextField(
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+    weight = models.IntegerField(
+        blank=True,
+        null=True,
+    )
