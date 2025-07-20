@@ -9,9 +9,19 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from django.contrib.auth.models import User
-from app_run.models import Run, AthleteInfo
-from app_run.serializers import RunSerializer, UserSerializer, AthleteInfoSerializer
-from project_run.settings.base import COMPANY_NAME, SLOGAN, CONTACTS
+from app_run.models import Run, AthleteInfo, Challenge
+from app_run.serializers import (
+    RunSerializer,
+    UserSerializer,
+    AthleteInfoSerializer,
+    ChallengeSerializer,
+)
+from project_run.settings.base import (
+    COMPANY_NAME,
+    SLOGAN,
+    CONTACTS,
+    CHALLENGE_DO_10_RUNS,
+)
 
 
 @api_view(["GET"])
@@ -52,6 +62,18 @@ class RunViewSet(ModelViewSet):
     pagination_class = RunPagination
 
 
+class ChallengeViewSet(ModelViewSet):
+    queryset = Challenge.objects.all()
+    serializer_class = ChallengeSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        athlete = self.request.query_params.get("athlete", None)
+        if athlete:
+            queryset = queryset.filter(athlete=athlete)
+        return queryset
+
+
 class RunAPIStartView(APIView):
     def post(self, request: Request, run_id: int) -> Response:
         run = get_object_or_404(Run, id=run_id)
@@ -81,6 +103,15 @@ class RunAPIStopView(APIView):
                 {"message": "Run stopped"},
                 status=status.HTTP_200_OK,
             )
+        finished_run_count = Run.objects.filter(
+            status=Run.FINISHED, athlete=run.athlete.id
+        ).count()
+        if finished_run_count >= 10:
+            challenge = Challenge(
+                full_name=CHALLENGE_DO_10_RUNS,
+                athlete=AthleteInfo.objects.get(user_id=run.athlete),
+            )
+            challenge.save()
         return Response(
             {"message": "Run not started or already finished"},
             status=status.HTTP_400_BAD_REQUEST,

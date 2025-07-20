@@ -121,3 +121,4 @@ CONTACTS = "ООО «Probezhka» Россия, г. Санкт-Петербург
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+CHALLENGE_DO_10_RUNS = "Сделай 10 Забегов!"

@@ -8,6 +8,7 @@ from app_run.views import (
     RunAPIStartView,
     RunAPIStopView,
     AthleteInfoAPIView,
+    ChallengeViewSet,
 )
 
 router = DefaultRouter()
@@ -18,6 +19,10 @@ router.register(
 router.register(
     "users",
     UsersTypeViewSet,
+)
+router.register(
+    "challenges",
+    ChallengeViewSet,
 )
 urlpatterns = [
     path("company_details/", company_details),
