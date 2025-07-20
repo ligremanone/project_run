@@ -124,7 +124,7 @@ class AthleteInfoAPIView(APIView):
         return Response(AthleteInfoSerializer(athlete).data)
 
     def put(self, request: Request, athlete_id: int) -> Response:
-        if (
+        if not request.data.get("weight").isdigit() or (
             int(request.data.get("weight")) <= 0
             or int(request.data.get("weight")) >= 900
         ):
