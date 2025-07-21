@@ -9,12 +9,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from django.contrib.auth.models import User
-from app_run.models import Run, AthleteInfo, Challenge
+from app_run.models import Run, AthleteInfo, Challenge, Position
 from app_run.serializers import (
     RunSerializer,
     UserSerializer,
     AthleteInfoSerializer,
     ChallengeSerializer,
+    PositionSerializer,
 )
 from project_run.settings.base import (
     COMPANY_NAME,
@@ -60,6 +61,11 @@ class RunViewSet(ModelViewSet):
         "created_at",
     ]
     pagination_class = RunPagination
+
+
+class PositionViewSet(ModelViewSet):
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer
 
 
 class ChallengeViewSet(ModelViewSet):
