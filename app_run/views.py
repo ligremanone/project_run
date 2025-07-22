@@ -23,6 +23,7 @@ from project_run.settings.base import (
     CONTACTS,
     CHALLENGE_DO_10_RUNS,
 )
+from geopy import distance
 
 
 @api_view(["GET"])
@@ -98,12 +99,20 @@ class RunAPIStartView(APIView):
 
 class RunAPIStopView(APIView):
     def post(self, request: Request, run_id: int) -> Response:
+        run_distance = 0
         run = get_object_or_404(
             Run,
             id=run_id,
         )
         if run.status == Run.IN_PROGRESS:
             run.status = Run.FINISHED
+            positions = Position.objects.filter(run=run)
+            for i in range(len(positions) - 1):
+                run_distance += distance.distance(
+                    (positions[i].latitude, positions[i].longitude),
+                    (positions[i + 1].latitude, positions[i + 1].longitude),
+                ).km
+            run.distance = round(run_distance, 3)
             run.save()
             finished_run_count = Run.objects.filter(
                 status=Run.FINISHED, athlete=run.athlete.id
