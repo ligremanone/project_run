@@ -27,6 +27,10 @@ class Run(models.Model):
         blank=True,
         null=True,
     )
+    distance = models.FloatField(
+        blank=True,
+        null=True,
+    )
 
 
 class AthleteInfo(models.Model):
