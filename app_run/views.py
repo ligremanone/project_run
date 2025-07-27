@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -124,7 +125,10 @@ class RunAPIStopView(APIView):
                     athlete=AthleteInfo.objects.get(user_id=run.athlete),
                 )
                 challenge.save()
-            if run_distance >= 50:
+            total_distance = Run.objects.filter(athlete=run.athlete).aggregate(
+                Sum("distance")
+            )
+            if total_distance.get("distance__sum") + run_distance >= 50:
                 challenge = Challenge(
                     full_name=CHALLENGE_50_KILOMETERS_RUNS,
                     athlete=AthleteInfo.objects.get(user_id=run.athlete),
