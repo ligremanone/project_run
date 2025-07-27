@@ -22,6 +22,7 @@ from project_run.settings.base import (
     SLOGAN,
     CONTACTS,
     CHALLENGE_DO_10_RUNS,
+    CHALLENGE_50_KILOMETERS_RUNS,
 )
 from geopy import distance
 
@@ -120,6 +121,12 @@ class RunAPIStopView(APIView):
             if finished_run_count == 10:
                 challenge = Challenge(
                     full_name=CHALLENGE_DO_10_RUNS,
+                    athlete=AthleteInfo.objects.get(user_id=run.athlete),
+                )
+                challenge.save()
+            if run_distance >= 50:
+                challenge = Challenge(
+                    full_name=CHALLENGE_50_KILOMETERS_RUNS,
                     athlete=AthleteInfo.objects.get(user_id=run.athlete),
                 )
                 challenge.save()

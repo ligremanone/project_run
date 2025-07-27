@@ -122,3 +122,4 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 CHALLENGE_DO_10_RUNS = "Сделай 10 Забегов!"
+CHALLENGE_50_KILOMETERS_RUNS = "Пробеги 50 километров!"
