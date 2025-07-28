@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_filters",
     "app_run",
+    "app_athletes",
+    "app_challenges",
+    "app_positions",
+    "users",
 ]
 
 MIDDLEWARE = [

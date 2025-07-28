@@ -21,5 +21,9 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include("app_run.urls")),
+    path("api/runs/", include("app_run.urls")),
+    path("api/athlete_info/", include("app_athletes.urls")),
+    path("api/users/", include("users.urls")),
+    path("api/challenges/", include("app_challenges.urls")),
+    path("api/positions/", include("app_positions.urls")),
 ] + debug_toolbar_urls()
