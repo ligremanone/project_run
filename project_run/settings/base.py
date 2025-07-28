@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "app_challenges",
     "app_positions",
     "users",
+    "collectible_items",
 ]
 
 MIDDLEWARE = [

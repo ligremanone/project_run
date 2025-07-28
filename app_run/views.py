@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -16,6 +18,8 @@ from app_athletes.models import AthleteInfo
 from app_run.serializers import (
     RunSerializer,
 )
+from collectible_items.models import CollectibleItem
+from collectible_items.serializers import CollectibleItemSerializer
 from project_run.settings.base import (
     COMPANY_NAME,
     SLOGAN,
@@ -24,6 +28,7 @@ from project_run.settings.base import (
     CHALLENGE_50_KILOMETERS_RUNS,
 )
 from geopy import distance
+from openpyxl import load_workbook
 
 
 @api_view(["GET"])
@@ -35,6 +40,25 @@ def company_details(request: Request) -> Response:
             "contacts": CONTACTS,
         }
     )
+
+
+@api_view(["POST"])
+def upload_file(request):
+    file = request.FILES.get("file")
+    wb = load_workbook(file)
+    sheet = wb.active
+    headers = [cell.value.lower() for cell in sheet[1]]
+    rows = list(sheet.iter_rows(values_only=True, min_row=2))
+    error_data = []
+    for idx, row in enumerate(rows, start=2):
+        data = dict(zip(headers, row))
+        serializer = CollectibleItemSerializer(data=data)
+        if serializer.is_valid():
+            collectible_item = CollectibleItem(**serializer.validated_data)
+            collectible_item.save()
+        else:
+            error_data.append(list(row))
+    return Response(data=error_data)
 
 
 class RunPagination(PageNumberPagination):
