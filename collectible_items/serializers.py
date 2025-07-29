@@ -25,3 +25,9 @@ class CollectibleItemSerializer(serializers.ModelSerializer):
         if -180 <= value <= 180:
             return value
         raise serializers.ValidationError("Incorrect longitude value")
+
+
+class CollectibleItemListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CollectibleItem
+        fields = "__all__"
