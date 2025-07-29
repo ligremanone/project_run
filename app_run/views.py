@@ -61,6 +61,7 @@ def upload_file(request):
         data = dict(zip(headers, row))
         serializer = CollectibleItemSerializer(data=data)
         if serializer.is_valid():
+            print(serializer.validated_data)
             serializer.save()
             # collectible_item = CollectibleItem(**serializer.validated_data)
             # collectible_item.save()
