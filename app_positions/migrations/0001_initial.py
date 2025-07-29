@@ -8,11 +8,11 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
+    dependencies = [  # noqa: RUF012
         ("app_run", "0008_remove_challenge_athlete_remove_position_run_and_more"),
     ]
 
-    operations = [
+    operations = [  # noqa: RUF012
         migrations.CreateModel(
             name="Position",
             fields=[
@@ -30,7 +30,8 @@ class Migration(migrations.Migration):
                 (
                     "run",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="app_run.run"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app_run.run",
                     ),
                 ),
             ],

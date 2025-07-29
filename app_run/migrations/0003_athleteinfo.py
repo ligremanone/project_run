@@ -7,12 +7,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
+    dependencies = [  # noqa: RUF012
         ("app_run", "0002_run_status"),
         ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
-    operations = [
+    operations = [  # noqa: RUF012
         migrations.CreateModel(
             name="AthleteInfo",
             fields=[

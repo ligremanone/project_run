@@ -6,11 +6,11 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
+    dependencies = [  # noqa: RUF012
         ("app_run", "0004_rename_user_athleteinfo_user_id"),
     ]
 
-    operations = [
+    operations = [  # noqa: RUF012
         migrations.CreateModel(
             name="Challenge",
             fields=[

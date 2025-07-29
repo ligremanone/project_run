@@ -1,6 +1,5 @@
-from django.db import models
-
 from app_athletes.models import AthleteInfo
+from django.db import models
 
 
 class Challenge(models.Model):
@@ -9,3 +8,6 @@ class Challenge(models.Model):
         AthleteInfo,
         on_delete=models.CASCADE,
     )
+
+    def __str__(self) -> str:
+        return self.full_name

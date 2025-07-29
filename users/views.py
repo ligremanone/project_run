@@ -1,6 +1,8 @@
+from typing import ClassVar
+
 from django.contrib.auth.models import User
-from django.shortcuts import render
-from rest_framework.filters import SearchFilter, OrderingFilter
+from django.db.models import QuerySet
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
@@ -15,20 +17,20 @@ class UserPagination(PageNumberPagination):
 class UsersTypeViewSet(ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filter_backends = [
+    filter_backends: ClassVar[list[str]] = [
         SearchFilter,
         OrderingFilter,
     ]
-    search_fields = [
+    search_fields: ClassVar[list[str]] = [
         "last_name",
         "first_name",
     ]
-    filterset_fields = [
+    filterset_fields: ClassVar[list[str]] = [
         "date_joined",
     ]
     pagination_class = UserPagination
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         queryset = self.queryset.filter(is_superuser=False)
         type = self.request.query_params.get("type", None)
         if type:

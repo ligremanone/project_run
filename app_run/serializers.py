@@ -1,6 +1,6 @@
+from app_athletes.serializers import AthleteSerializer
 from rest_framework import serializers
 
-from app_athletes.serializers import AthleteSerializer
 from app_run.models import Run
 
 

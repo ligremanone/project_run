@@ -11,9 +11,12 @@ class AthleteInfo(models.Model):
     goals = models.TextField(
         max_length=50,
         blank=True,
-        null=True,
+        default="",
     )
     weight = models.IntegerField(
         blank=True,
         null=True,
     )
+
+    def __str__(self) -> str:
+        return f"{self.user_id}"

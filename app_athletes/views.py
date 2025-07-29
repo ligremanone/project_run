@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -10,7 +10,7 @@ from app_athletes.serializers import AthleteInfoSerializer
 
 
 class AthleteInfoAPIView(APIView):
-    def get(self, request: Request, athlete_id: int) -> Response:
+    def get(self, request: Request, athlete_id: int) -> Response:  # noqa: ARG002
         user = get_object_or_404(
             User,
             id=athlete_id,

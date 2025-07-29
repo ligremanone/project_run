@@ -14,3 +14,6 @@ class CollectibleItem(models.Model):
     )
     picture = models.URLField()
     value = models.IntegerField()
+
+    def __str__(self) -> str:
+        return self.name

@@ -8,11 +8,11 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
+    dependencies = [  # noqa: RUF012
         ("app_athletes", "0001_initial"),
     ]
 
-    operations = [
+    operations = [  # noqa: RUF012
         migrations.CreateModel(
             name="Challenge",
             fields=[

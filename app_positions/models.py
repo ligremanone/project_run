@@ -1,6 +1,5 @@
-from django.db import models
-
 from app_run.models import Run
+from django.db import models
 
 
 class Position(models.Model):
@@ -16,3 +15,6 @@ class Position(models.Model):
         max_digits=7,
         decimal_places=4,
     )
+
+    def __str__(self) -> str:
+        return f"{self.run}"

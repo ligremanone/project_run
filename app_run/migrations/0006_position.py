@@ -6,11 +6,11 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
+    dependencies = [  # noqa: RUF012
         ("app_run", "0005_challenge"),
     ]
 
-    operations = [
+    operations = [  # noqa: RUF012
         migrations.CreateModel(
             name="Position",
             fields=[
@@ -28,7 +28,8 @@ class Migration(migrations.Migration):
                 (
                     "run",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="app_run.run"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app_run.run",
                     ),
                 ),
             ],

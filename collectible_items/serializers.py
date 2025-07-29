@@ -1,5 +1,8 @@
-from collectible_items.models import CollectibleItem
+from typing import ClassVar
+
 from rest_framework import serializers
+
+from collectible_items.models import CollectibleItem
 
 
 class CollectibleItemSerializer(serializers.ModelSerializer):
@@ -7,7 +10,7 @@ class CollectibleItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CollectibleItem
-        fields = [
+        fields: ClassVar[list[str]] = [
             "name",
             "uid",
             "latitude",
@@ -16,12 +19,12 @@ class CollectibleItemSerializer(serializers.ModelSerializer):
             "value",
         ]
 
-    def validate_latitude(self, value):
+    def validate_latitude(self, value: int) -> int:
         if -90 <= value <= 90:
             return value
         raise serializers.ValidationError("Incorrect latitude value")
 
-    def validate_longitude(self, value):
+    def validate_longitude(self, value: int) -> int:
         if -180 <= value <= 180:
             return value
         raise serializers.ValidationError("Incorrect longitude value")

@@ -1,8 +1,21 @@
-from pprint import pprint
+from typing import ClassVar
 
+from app_athletes.models import AthleteInfo
+from app_challenges.models import Challenge
+from app_positions.models import Position
+from collectible_items.serializers import CollectibleItemSerializer
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from geopy import distance
+from openpyxl import load_workbook
+from project_run.settings.base import (
+    CHALLENGE_50_KILOMETERS_RUNS,
+    CHALLENGE_DO_10_RUNS,
+    COMPANY_NAME,
+    CONTACTS,
+    SLOGAN,
+)
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.filters import OrderingFilter
@@ -11,39 +24,26 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+
 from app_run.models import Run
-from app_positions.models import Position
-from app_challenges.models import Challenge
-from app_athletes.models import AthleteInfo
 from app_run.serializers import (
     RunSerializer,
 )
-from collectible_items.models import CollectibleItem
-from collectible_items.serializers import CollectibleItemSerializer
-from project_run.settings.base import (
-    COMPANY_NAME,
-    SLOGAN,
-    CONTACTS,
-    CHALLENGE_DO_10_RUNS,
-    CHALLENGE_50_KILOMETERS_RUNS,
-)
-from geopy import distance
-from openpyxl import load_workbook
 
 
 @api_view(["GET"])
-def company_details(request: Request) -> Response:
+def company_details(request: Request) -> Response:  # noqa: ARG001
     return Response(
         {
             "company_name": COMPANY_NAME,
             "slogan": SLOGAN,
             "contacts": CONTACTS,
-        }
+        },
     )
 
 
 @api_view(["POST"])
-def upload_file(request):
+def upload_file(request: Request) -> Response:
     file = request.FILES.get("file")
     wb = load_workbook(file)
     sheet = wb.active
@@ -57,14 +57,11 @@ def upload_file(request):
     ]
     rows = list(sheet.iter_rows(values_only=True, min_row=2))
     error_data = []
-    for idx, row in enumerate(rows, start=2):
-        data = dict(zip(headers, row))
+    for _idx, row in enumerate(rows, start=2):
+        data = dict(zip(headers, row, strict=False))
         serializer = CollectibleItemSerializer(data=data)
         if serializer.is_valid():
-            print(f"DEBUG_1 {serializer.validated_data}")
             serializer.save()
-            # collectible_item = CollectibleItem(**serializer.validated_data)
-            # collectible_item.save()
         else:
             error_data.append(list(row))
     return Response(data=error_data)
@@ -78,22 +75,22 @@ class RunPagination(PageNumberPagination):
 class RunViewSet(ModelViewSet):
     queryset = Run.objects.all().prefetch_related("athlete")
     serializer_class = RunSerializer
-    filter_backends = [
+    filter_backends: ClassVar[list] = [
         DjangoFilterBackend,
         OrderingFilter,
     ]
-    filterset_fields = [
+    filterset_fields: ClassVar[list[str]] = [
         "status",
         "athlete",
     ]
-    ordering_fields = [
+    ordering_fields: ClassVar[list[str]] = [
         "created_at",
     ]
     pagination_class = RunPagination
 
 
 class RunAPIStartView(APIView):
-    def post(self, request: Request, run_id: int) -> Response:
+    def post(self, request: Request, run_id: int) -> Response:  # noqa: ARG002
         run = get_object_or_404(Run, id=run_id)
         if run.status == Run.INITIAL:
             run.status = Run.IN_PROGRESS
@@ -109,7 +106,7 @@ class RunAPIStartView(APIView):
 
 
 class RunAPIStopView(APIView):
-    def post(self, request: Request, run_id: int) -> Response:
+    def post(self, request: Request, run_id: int) -> Response:  # noqa: ARG002
         run_distance = 0
         run = get_object_or_404(
             Run,
@@ -126,7 +123,8 @@ class RunAPIStopView(APIView):
             run.distance = round(run_distance, 3)
             run.save()
             finished_run_count = Run.objects.filter(
-                status=Run.FINISHED, athlete=run.athlete.id
+                status=Run.FINISHED,
+                athlete=run.athlete.id,
             ).count()
             if finished_run_count == 10:
                 challenge = Challenge(
@@ -135,7 +133,7 @@ class RunAPIStopView(APIView):
                 )
                 challenge.save()
             total_distance = Run.objects.filter(athlete=run.athlete).aggregate(
-                Sum("distance")
+                Sum("distance"),
             )
             if total_distance.get("distance__sum") >= 50:
                 challenge = Challenge(

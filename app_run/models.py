@@ -1,12 +1,14 @@
-from django.db import models
+from typing import ClassVar
+
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Run(models.Model):
     INITIAL = "init"
     IN_PROGRESS = "in_progress"
     FINISHED = "finished"
-    STATUS_CHOICES = [
+    STATUS_CHOICES: ClassVar[list] = [
         (INITIAL, "Initial"),
         (IN_PROGRESS, "In progress"),
         (FINISHED, "Finished"),
@@ -25,9 +27,12 @@ class Run(models.Model):
     )
     comment = models.TextField(
         blank=True,
-        null=True,
+        default="",
     )
     distance = models.FloatField(
         blank=True,
         null=True,
     )
+
+    def __str__(self) -> str:
+        return f"{self.athlete.username}"

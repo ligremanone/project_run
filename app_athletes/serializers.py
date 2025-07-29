@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -7,7 +9,7 @@ from app_athletes.models import AthleteInfo
 class AthleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = [
+        fields: ClassVar[list] = [
             "id",
             "username",
             "last_name",
