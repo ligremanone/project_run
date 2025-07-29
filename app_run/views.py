@@ -53,6 +53,10 @@ def upload_file(request):
     for idx, row in enumerate(rows, start=2):
         data = dict(zip(headers, row))
         serializer = CollectibleItemSerializer(data=data)
+        print(f"DEBUG_1 {data}")
+        print(f"DEBUG_1_1 {type(data)}")
+        print(f"DEBUG_2 {serializer.is_valid()}")
+        print(f"DEBUG_3 {serializer.errors}")
         if serializer.is_valid():
             collectible_item = CollectibleItem(**serializer.validated_data)
             collectible_item.save()
