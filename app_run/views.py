@@ -47,7 +47,15 @@ def upload_file(request):
     file = request.FILES.get("file")
     wb = load_workbook(file)
     sheet = wb.active
-    headers = [cell.value.lower() for cell in sheet[1]]
+    # headers = [cell.value.lower() for cell in sheet[1]]
+    headers = [
+        "name",
+        "uid",
+        "value",
+        "latitude",
+        "longitude",
+        "url",
+    ]
     rows = list(sheet.iter_rows(values_only=True, min_row=2))
     error_data = []
     for idx, row in enumerate(rows, start=2):
