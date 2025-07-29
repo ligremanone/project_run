@@ -47,7 +47,6 @@ def upload_file(request):
     file = request.FILES.get("file")
     wb = load_workbook(file)
     sheet = wb.active
-    # headers = [cell.value.lower() for cell in sheet[1]]
     headers = [
         "name",
         "uid",
@@ -61,13 +60,10 @@ def upload_file(request):
     for idx, row in enumerate(rows, start=2):
         data = dict(zip(headers, row))
         serializer = CollectibleItemSerializer(data=data)
-        print(f"DEBUG_1 {data}")
-        print(f"DEBUG_1_1 {type(data)}")
-        print(f"DEBUG_2 {serializer.is_valid()}")
-        print(f"DEBUG_3 {serializer.errors}")
         if serializer.is_valid():
-            collectible_item = CollectibleItem(**serializer.validated_data)
-            collectible_item.save()
+            serializer.save()
+            # collectible_item = CollectibleItem(**serializer.validated_data)
+            # collectible_item.save()
         else:
             error_data.append(list(row))
     return Response(data=error_data)
