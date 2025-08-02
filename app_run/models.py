@@ -35,4 +35,4 @@ class Run(models.Model):
     )
 
     def __str__(self) -> str:
-        return f"{self.athlete.username}"
+        return f"{self.pk} - {self.athlete.username} - {self.status}"

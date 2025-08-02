@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -14,6 +15,11 @@ class CollectibleItem(models.Model):
     )
     picture = models.URLField()
     value = models.IntegerField()
+    athlete = models.ManyToManyField(
+        to=User,
+        related_name="collectible_items",
+        blank=True,
+    )
 
     def __str__(self) -> str:
         return self.name

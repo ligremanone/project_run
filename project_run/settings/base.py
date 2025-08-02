@@ -129,3 +129,4 @@ INTERNAL_IPS = [
 ]
 CHALLENGE_DO_10_RUNS = "Сделай 10 Забегов!"
 CHALLENGE_50_KILOMETERS_RUNS = "Пробеги 50 километров!"
+DISTANCE_TO_ITEM = 0.1

@@ -33,4 +33,12 @@ class CollectibleItemSerializer(serializers.ModelSerializer):
 class CollectibleItemListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CollectibleItem
-        fields = "__all__"
+        fields: ClassVar[list[str]] = [
+            "id",
+            "name",
+            "uid",
+            "latitude",
+            "longitude",
+            "picture",
+            "value",
+        ]

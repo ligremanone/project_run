@@ -6,7 +6,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from users.serializers import UserSerializer
+from users.serializers import UserDetailSerializer, UserSerializer
 
 
 class UserPagination(PageNumberPagination):
@@ -39,3 +39,10 @@ class UsersTypeViewSet(ReadOnlyModelViewSet):
             elif type == "athlete":
                 queryset = queryset.filter(is_staff=False)
         return queryset
+
+    def get_serializer_class(self) -> type[UserSerializer | UserDetailSerializer]:
+        if self.action == "list":
+            return UserSerializer
+        if self.action == "retrieve":
+            return UserDetailSerializer
+        return super().get_serializer_class()
