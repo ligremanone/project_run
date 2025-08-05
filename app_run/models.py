@@ -33,6 +33,10 @@ class Run(models.Model):
         blank=True,
         null=True,
     )
+    run_time_seconds = models.IntegerField(
+        blank=True,
+        null=True,
+    )
 
     def __str__(self) -> str:
         return f"{self.pk} - {self.athlete.username} - {self.status}"

@@ -15,6 +15,10 @@ class Position(models.Model):
         max_digits=7,
         decimal_places=4,
     )
+    date_time = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
 
     def __str__(self) -> str:
-        return f"{self.run}"
+        return f"{self.run} {self.date_time}"

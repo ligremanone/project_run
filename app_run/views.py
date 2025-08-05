@@ -141,10 +141,16 @@ class RunAPIStopView(APIView):
                     athlete=AthleteInfo.objects.get(user_id=run.athlete),
                 )
                 challenge.save()
+            first_position = positions.first()
+            last_position = positions.last()
+            diff_seconds = (last_position.date_time - first_position.date_time).seconds
+            run.run_time_seconds = int(diff_seconds)
+            run.save()
             return Response(
                 {"message": "Run stopped"},
                 status=status.HTTP_200_OK,
             )
+
         return Response(
             {"message": "Run not started or already finished"},
             status=status.HTTP_400_BAD_REQUEST,

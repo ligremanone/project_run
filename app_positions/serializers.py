@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from app_run.models import Run
 from rest_framework import serializers
 
@@ -5,9 +7,16 @@ from app_positions.models import Position
 
 
 class PositionSerializer(serializers.ModelSerializer):
+    date_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S.%f")
+
     class Meta:
         model = Position
-        fields = "__all__"
+        fields: ClassVar[list] = [
+            "run",
+            "latitude",
+            "longitude",
+            "date_time",
+        ]
 
     def validate_run(self, value: Run) -> Run:
         if value.status == Run.IN_PROGRESS:
