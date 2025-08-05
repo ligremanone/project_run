@@ -4,7 +4,7 @@ from app_athletes.models import AthleteInfo
 from app_challenges.models import Challenge
 from app_positions.models import Position
 from collectible_items.serializers import CollectibleItemSerializer
-from django.db.models import Sum
+from django.db.models import Max, Min, Sum
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from geopy import distance
@@ -141,9 +141,13 @@ class RunAPIStopView(APIView):
                     athlete=AthleteInfo.objects.get(user_id=run.athlete),
                 )
                 challenge.save()
-            first_position = positions.first()
-            last_position = positions.last()
-            diff_seconds = (last_position.date_time - first_position.date_time).seconds
+            first_position_time = positions.aggregate(Min("date_time")).get(
+                "date_time__min",
+            )
+            last_position_time = positions.aggregate(Max("date_time")).get(
+                "date_time__max",
+            )
+            diff_seconds = (last_position_time - first_position_time).seconds
             run.run_time_seconds = int(diff_seconds)
             run.save()
             return Response(
