@@ -1,5 +1,6 @@
 from app_run.models import Run
 from collectible_items.models import CollectibleItem
+from django.db.models import QuerySet
 from project_run.settings.base import DISTANCE_TO_ITEM
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -31,3 +32,10 @@ class PositionViewSet(ModelViewSet):
                 athlete = run.athlete
                 athlete.collectible_items.add(item)
         return response
+
+    def get_queryset(self) -> QuerySet:
+        queryset = super().get_queryset()
+        run_id = self.request.query_params.get("run", None)
+        if run_id:
+            return queryset.filter(run=run_id)
+        return queryset
