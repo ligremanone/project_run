@@ -147,9 +147,10 @@ class RunAPIStopView(APIView):
             last_position_time = positions.aggregate(Max("date_time")).get(
                 "date_time__max",
             )
-            diff_seconds = (last_position_time - first_position_time).seconds
-            run.run_time_seconds = int(diff_seconds)
-            run.save()
+            if first_position_time and last_position_time:
+                diff_seconds = (last_position_time - first_position_time).seconds
+                run.run_time_seconds = int(diff_seconds)
+                run.save()
             return Response(
                 {"message": "Run stopped"},
                 status=status.HTTP_200_OK,
