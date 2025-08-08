@@ -1,7 +1,9 @@
 from typing import ClassVar
 
+from app_run.models import Run
 from django.contrib.auth.models import User
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
+from django.db.models.aggregates import Count
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ReadOnlyModelViewSet
@@ -17,7 +19,7 @@ class UserPagination(PageNumberPagination):
 class UsersTypeViewSet(ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filter_backends: ClassVar[list[str]] = [
+    filter_backends: ClassVar[list] = [
         SearchFilter,
         OrderingFilter,
     ]
@@ -38,7 +40,12 @@ class UsersTypeViewSet(ReadOnlyModelViewSet):
                 queryset = queryset.filter(is_staff=True)
             elif type == "athlete":
                 queryset = queryset.filter(is_staff=False)
-        return queryset
+        return queryset.annotate(
+            runs_finished=Count(
+                "run",
+                filter=Q(run__status=Run.FINISHED),
+            ),
+        )
 
     def get_serializer_class(self) -> type[UserSerializer | UserDetailSerializer]:
         if self.action == "list":

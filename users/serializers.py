@@ -1,6 +1,5 @@
 from typing import ClassVar
 
-from app_run.models import Run
 from collectible_items.serializers import CollectibleItemListSerializer
 from django.contrib.auth.models import User
 from rest_framework import serializers
@@ -8,7 +7,7 @@ from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
-    runs_finished = serializers.SerializerMethodField()
+    runs_finished = serializers.IntegerField()
 
     class Meta:
         model = User
@@ -24,9 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_type(self, obj: User) -> str:
         return "coach" if obj.is_staff else "athlete"
-
-    def get_runs_finished(self, obj: User) -> int:
-        return obj.run_set.filter(status=Run.FINISHED).count()
 
 
 class UserDetailSerializer(UserSerializer):
