@@ -1,4 +1,7 @@
+from django.db.models import QuerySet
 from geopy import distance
+
+from app_positions.models import Position
 
 
 def calculate_distance_to_item(
@@ -29,3 +32,22 @@ def is_distance_to_item_less_than(
         )
         < distance_to_item
     )
+
+
+def speed_calculation(prev_position: Position, current_position: Position) -> float:
+    distance_between_positions = distance.distance(
+        (prev_position.latitude, prev_position.longitude),
+        (current_position.latitude, current_position.longitude),
+    ).m
+    time = (current_position.date_time - prev_position.date_time).seconds
+    return round(distance_between_positions / time, 2)
+
+
+def calculate_all_distance(positions: QuerySet) -> float:
+    result = 0
+    for i in range(len(positions) - 1):
+        result += distance.distance(
+            (positions[i].latitude, positions[i].longitude),
+            (positions[i + 1].latitude, positions[i + 1].longitude),
+        ).km
+    return round(result, 2)

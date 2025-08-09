@@ -19,6 +19,14 @@ class Position(models.Model):
         blank=True,
         null=True,
     )
+    speed = models.FloatField(
+        blank=True,
+        default=0.0,
+    )
+    distance = models.FloatField(
+        blank=True,
+        default=0.0,
+    )
 
     def __str__(self) -> str:
         return f"{self.run} {self.date_time}"

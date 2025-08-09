@@ -54,6 +54,7 @@ exclude = [
     "site-packages",
     "venv",
     ".venv",
+    'migrations',
 ]
 line-length = 88
 indent-width = 4

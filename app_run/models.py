@@ -37,6 +37,10 @@ class Run(models.Model):
         blank=True,
         null=True,
     )
+    speed = models.FloatField(
+        blank=True,
+        default=0,
+    )
 
     def __str__(self) -> str:
         return f"{self.pk} - {self.athlete.username} - {self.status}"
