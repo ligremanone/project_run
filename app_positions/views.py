@@ -35,12 +35,12 @@ class PositionViewSet(ModelViewSet):
                 athlete = run.athlete
                 athlete.collectible_items.add(item)
         previous_position = Position.objects.filter(run=run).last()
-        all_distance = calculate_all_distance(Position.objects.filter(run=run))
         if previous_position is None:
             return super().create(request, *args, **kwargs)
         response = super().create(request, *args, **kwargs)
         current_position = Position.objects.filter(run=run).last()
         current_position.speed = speed_calculation(previous_position, current_position)
+        all_distance = calculate_all_distance(Position.objects.filter(run=run))
         current_position.distance = all_distance
         current_position.save()
         return response
