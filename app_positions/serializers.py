@@ -16,6 +16,8 @@ class PositionSerializer(serializers.ModelSerializer):
             "latitude",
             "longitude",
             "date_time",
+            "speed",
+            "distance",
         ]
 
     def validate_run(self, value: Run) -> Run:
