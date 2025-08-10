@@ -10,6 +10,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from geopy import distance
 from openpyxl import load_workbook
 from project_run.settings.base import (
+    CHALLENGE_2_KILOMETERS_IN_10_MINUTES,
     CHALLENGE_50_KILOMETERS_RUNS,
     CHALLENGE_DO_10_RUNS,
     COMPANY_NAME,
@@ -156,7 +157,12 @@ class RunAPIStopView(APIView):
                 diff_seconds = (last_position_time - first_position_time).seconds
                 run.run_time_seconds = int(diff_seconds)
                 run.save()
-
+            if run.distance >= 2 and run.run_time_seconds / 60 <= 10:
+                challenge = Challenge(
+                    full_name=CHALLENGE_2_KILOMETERS_IN_10_MINUTES,
+                    athlete=AthleteInfo.objects.get(user_id=run.athlete),
+                )
+                challenge.save()
             return Response(
                 {"message": "Run stopped"},
                 status=status.HTTP_200_OK,
