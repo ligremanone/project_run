@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "app_positions",
     "users",
     "collectible_items",
+    "app_subscribe",
 ]
 
 MIDDLEWARE = [

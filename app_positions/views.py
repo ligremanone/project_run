@@ -15,7 +15,6 @@ from app_positions.utils import (
 )
 
 
-# Create your views here.
 class PositionViewSet(ModelViewSet):
     queryset = Position.objects.all()
     serializer_class = PositionSerializer

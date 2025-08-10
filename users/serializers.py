@@ -1,5 +1,6 @@
 from typing import ClassVar
 
+from app_subscribe.models import Subscribe
 from collectible_items.serializers import CollectibleItemListSerializer
 from django.contrib.auth.models import User
 from rest_framework import serializers
@@ -36,4 +37,40 @@ class UserDetailSerializer(UserSerializer):
         model = User
         fields = UserSerializer.Meta.fields + [
             "items",
+        ]
+
+
+class AthleteUserDetailSerializer(UserDetailSerializer):
+    coach = serializers.SerializerMethodField()
+
+    class Meta(UserSerializer.Meta):
+        model = User
+        fields = UserSerializer.Meta.fields + [
+            "coach",
+        ]
+
+    def get_coach(self, obj: User) -> int | None:
+        if Subscribe.objects.filter(athlete=obj).exists():
+            return Subscribe.objects.filter(athlete=obj).first().coach.id
+        return None
+
+    def to_representation(self, instance: User) -> dict:
+        data = super().to_representation(instance)
+        if data.get("coach") is None:
+            data.pop("coach")
+        return data
+
+
+class CoachUserDetailSerializer(UserDetailSerializer):
+    athletes = serializers.SerializerMethodField()
+
+    class Meta(UserSerializer.Meta):
+        model = User
+        fields = UserSerializer.Meta.fields + [
+            "athletes",
+        ]
+
+    def get_athletes(self, obj: User) -> list[int]:
+        return [
+            subscribe.athlete.id for subscribe in Subscribe.objects.filter(coach=obj)
         ]
