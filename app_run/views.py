@@ -142,11 +142,16 @@ class RunAPIStopView(APIView):
                     athlete=AthleteInfo.objects.get(user_id=run.athlete),
                 )
                 challenge.save()
-            run.speed = round(
-                positions.aggregate(Sum("speed")).get("speed__sum") / positions.count(),
-                2,
-            )
-            run.save()
+            if (
+                positions.aggregate(Sum("speed")).get("speed__sum")
+                and positions.count() != 0
+            ):
+                run.speed = round(
+                    positions.aggregate(Sum("speed")).get("speed__sum")
+                    / positions.count(),
+                    2,
+                )
+                run.save()
             first_position_time = positions.aggregate(Min("date_time")).get(
                 "date_time__min",
             )
