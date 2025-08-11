@@ -54,12 +54,6 @@ class AthleteUserDetailSerializer(UserDetailSerializer):
             return Subscribe.objects.filter(athlete=obj).first().coach.id
         return None
 
-    def to_representation(self, instance: User) -> dict:
-        data = super().to_representation(instance)
-        if data.get("coach") is None:
-            data.pop("coach")
-        return data
-
 
 class CoachUserDetailSerializer(UserDetailSerializer):
     athletes = serializers.SerializerMethodField()

@@ -9,10 +9,10 @@ from app_subscribe.models import Subscribe
 
 
 class SubscribeAPIView(APIView):
-    def post(self, request: Request, coach_id: int) -> Response:
+    def post(self, request: Request, id: int) -> Response:
         coach = get_object_or_404(
             User,
-            id=coach_id,
+            id=id,
         )
         try:
             athlete = User.objects.get(id=request.data.get("athlete"))
