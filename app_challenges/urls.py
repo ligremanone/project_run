@@ -9,11 +9,11 @@ router.register(
     ChallengeViewSet,
     basename="challenges",
 )
-router.register(
-    "challenges_summary",
-    ChallengesSummaryViewSet,
-    basename="challenges_summary",
-)
+
 urlpatterns = [
     path("", include(router.urls)),
+    path(
+        "challenges_summary/",
+        ChallengesSummaryViewSet.as_view(),
+    ),
 ]
