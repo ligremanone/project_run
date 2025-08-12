@@ -15,7 +15,13 @@ class RatingAPIView(APIView):
             User,
             id=coach_id,
         )
-        rating = int(request.data.get("rating"))
+        try:
+            rating = int(request.data.get("rating"))
+        except ValueError:
+            return Response(
+                {"message": "Incorrect rating value"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         try:
             athlete = User.objects.get(id=request.data.get("athlete"))
         except User.DoesNotExist:
