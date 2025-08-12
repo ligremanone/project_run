@@ -53,7 +53,7 @@ class RatingAPIView(APIView):
             )
             return Response(
                 {"message": "Rating created"},
-                status=status.HTTP_201_CREATED,
+                status=status.HTTP_200_OK,
             )
         return Response(
             {"message": "Incorrect data"},
