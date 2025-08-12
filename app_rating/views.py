@@ -17,7 +17,7 @@ class RatingAPIView(APIView):
         )
         try:
             rating = int(request.data.get("rating"))
-        except ValueError:
+        except (ValueError, TypeError):
             return Response(
                 {"message": "Incorrect rating value"},
                 status=status.HTTP_400_BAD_REQUEST,
