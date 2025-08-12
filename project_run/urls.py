@@ -28,4 +28,5 @@ urlpatterns = [
     path("api/positions/", include("app_positions.urls")),
     path("api/collectible_item/", include("collectible_items.urls")),
     path("api/subscribe_to_coach/<int:id>/", include("app_subscribe.urls")),
+    path("api/rate_coach/<int:coach_id>/", include("app_rating.urls")),
 ] + debug_toolbar_urls()

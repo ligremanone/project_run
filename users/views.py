@@ -3,7 +3,7 @@ from typing import ClassVar
 from app_run.models import Run
 from django.contrib.auth.models import User
 from django.db.models import Q, QuerySet
-from django.db.models.aggregates import Count
+from django.db.models.aggregates import Avg, Count
 from django.shortcuts import get_object_or_404
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.pagination import PageNumberPagination
@@ -50,6 +50,9 @@ class UsersTypeViewSet(ReadOnlyModelViewSet):
             runs_finished=Count(
                 "run",
                 filter=Q(run__status=Run.FINISHED),
+            ),
+            rating=Avg(
+                "coach_rating__rating",
             ),
         )
 

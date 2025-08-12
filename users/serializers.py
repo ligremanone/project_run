@@ -9,6 +9,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
     runs_finished = serializers.IntegerField()
+    rating = serializers.FloatField()
 
     class Meta:
         model = User
@@ -20,6 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "type",
             "runs_finished",
+            "rating",
         ]
 
     def get_type(self, obj: User) -> str:
