@@ -3,8 +3,9 @@ from typing import ClassVar
 from app_athletes.models import AthleteInfo
 from app_challenges.models import Challenge
 from app_positions.models import Position
+from app_subscribe.models import Subscribe
 from collectible_items.serializers import CollectibleItemSerializer
-from django.db.models import Max, Min, Sum
+from django.db.models import Avg, Max, Min, Sum
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from geopy import distance
@@ -176,4 +177,34 @@ class RunAPIStopView(APIView):
         return Response(
             {"message": "Run not started or already finished"},
             status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+class CoachAnalyticsView(APIView):
+    def get(self, request: Request, coach_id: int) -> Response:  # noqa: ARG002
+        subscribe = Subscribe.objects.filter(coach=coach_id).select_related("athlete")
+        longest_run = (
+            subscribe.annotate(longest=Max("athlete__run__distance"))
+            .order_by("-longest")
+            .first()
+        )
+        total_run = (
+            subscribe.annotate(sum=Sum("athlete__run__distance"))
+            .order_by("-sum")
+            .first()
+        )
+        avg_speed = (
+            subscribe.annotate(avg_speed=Avg("athlete__run__speed"))
+            .order_by("-avg_speed")
+            .first()
+        )
+        return Response(
+            {
+                "longest_run_user": longest_run.athlete_id,
+                "longest_run_value": longest_run.longest,
+                "total_run_user": total_run.athlete_id,
+                "total_run_value": total_run.sum,
+                "speed_avg_user": avg_speed.athlete_id,
+                "speed_avg_value": avg_speed.avg_speed,
+            },
         )
